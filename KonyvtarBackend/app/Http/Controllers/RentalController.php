@@ -9,31 +9,21 @@ use Illuminate\Http\Request;
 
 class RentalController extends Controller
 {
-    public function create($id){
-        if (empty(Book::find($id))) {
-			$message = "A megadott azonosítóval nem található könyv";
-			return response()->json(['message' => $message], 404);
-		}
-        $data = [];
-		$data['start_date'] = Carbon::now();
-		$data['end_date'] = Carbon::now()->addDays(7);
-		$data['book_id'] = $id;
-		$data['id'] = Rental::insert($data);
-
-        
-        
-		/*$conflict = Rental::find($id);
-		$from = $conflict->start_date ?? "";
-        $till = $conflict->end_date ??"";
-
-		$check = Carbon::now()->between($from,$till, true);
-
-        if ($check) {
-			$message = "A megadott könyv ki van kölcsönözve";
-			return response()->json(response(['message' => $message], 409));
-		} */
+    public function create(Request $request, Book $book){
+        $count = Rental::where('book_id', $book->id)
+            ->where('start_date','<=',Carbon::now())
+            ->where('end_date','>=',Carbon::now())
+            ->count();
+        if ($count > 0) {
+            return response()->json(['message' => 'A konyv mar foglalt'], 409);
+        }
 		
+        $rental = new Rental();
+        $rental->book_id = $book->id;
+        $rental->start_date = Carbon::now();
+        $rental->end_date = Carbon::now()->addWeek();
+        $rental->save();
         
-		return response()->json($data, 201);
+		return response()->json($rental);
     }
 }

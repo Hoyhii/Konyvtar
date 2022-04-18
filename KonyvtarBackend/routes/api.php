@@ -22,4 +22,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 Route::get('/book', [BookController::class, 'index']);
 Route::post('/book', [BookController::class, 'create']);
-Route::post('/book/{id}/rent', [RentalController::class, 'create']);
+Route::post('/book/{book}/rent', [RentalController::class, 'create']);
