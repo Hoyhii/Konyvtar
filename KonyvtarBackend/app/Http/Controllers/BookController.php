@@ -16,18 +16,6 @@ class BookController extends Controller
     }
     public function create(BookRequest $request)
     {
-
-        $validator = Validator::make($request->all(), (new BookRequest())->rules());
-        if  ($validator->fails()) {
-            $errormsg = "";
-            foreach ($validator->errors()->all() as $error) {
-                $errormsg .= $error . " ";
-            }
-            $errormsg = trim($errormsg);
-            return response()->json($errormsg, 400);
-        }
-        
-        $request->validated();
         $book = new Book($request->only('title','author','publish_year','page_count'));
         $book->save();
         return response()->json($book, 201);

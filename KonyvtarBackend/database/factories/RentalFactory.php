@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,11 +18,9 @@ class RentalFactory extends Factory
     public function definition()
     {
         return [
-            'book_id' => $this->faker->numberBetween(1,25),
-            'start_date' => $this->faker->date('Y-m-d'),
-            'end_date' => $this->faker->date('Y-m-d'),
-            'created_at' => $this->faker->date('Y-m-d'),
-            'updated_at' => $this->faker->date('Y-m-d'),
+            'book_id' => $this->faker->numberBetween(1,50),
+            'start_date' => Carbon::now()->subDays($this->faker->numberBetween(1,10)),
+            'end_date' => Carbon::now()->addDays($this->faker->numberBetween(1,10)),
         ];
     }
 }
